@@ -21,10 +21,10 @@ Once you run go install you have access globally to the binary file
 -To get the fileinfo:
 
 no golang installed:
-`csvmanager -f "path/to/file" info`
+`./csvmanager -f "path/to/file" info`
 
 golang installed:
-`./csvmanager -f "path/to/file" info`
+`csvmanager -f "path/to/file" info`
 
 -To modify the file headers:
 
