@@ -19,21 +19,42 @@ var jsonFile ConfigFile
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "boom"
-	app.Usage = "make an explosive entrance"
-	/*app.Action = func(c *cli.Context) error {
-		//Call a function based on the params used when the app is called from the command bash
-		ModifyHeaders()
-		return nil
-	}*/
+	app.Name = "Csv-Manager"
+	app.Usage = "Get info from a csv and modify its headers"
+	app.Version="0.1.0"
+	var filePath string
+	var configPath string
+
+	app.Flags = []cli.Flag {
+		cli.StringFlag{
+			Name:        "filepath, f",
+			Value:       "",
+			Usage:       "the CSV file path",
+			Destination: &filePath,
+		},
+		cli.StringFlag{
+			Name:        "configp, c",
+			Value:       "",
+			Usage:       "the config file path",
+			Destination: &configPath,
+		},
+	}
 
 	app.Commands = []cli.Command{
 		{
-			Name:    "modifyheaders",
-			Aliases: []string{"mh"},
+			Name:    "headers",
+			Aliases: []string{"d"},
 			Usage:   "Modify headers for a file",
 			Action:  func(c *cli.Context) error {
-				ModifyHeaders()
+				if configPath != "" {
+					if filePath != ""{
+						ModifyHeaders(filePath)
+					} else {
+						log.Println("`filepath, f` flag has to be provided")
+					}
+				} else {
+					log.Println("`configp, c` flag has to be provided")
+				}
 				return nil
 			},
 		},
@@ -42,14 +63,20 @@ func main() {
 			Aliases: []string{"i"},
 			Usage:   "info about the file",
 			Action:  func(c *cli.Context) error {
-				loadConfig("config.json")
+				//loadConfig(configPath)
 				//log.Println(jsonFile)
-				log.Println("Getting the info of your csv...")
-				//Create the CsvModifier instance
-				csvModifier := CsvModifier{"feeds.samples-1.csv", uuid.NewV4().String() + ".csv", nil}
-				//only modify the 1st line
-				linesTotal := countCsvLines(csvModifier.CsvToModifyPath)
-				log.Printf("Total lines: %d", linesTotal)
+				if filePath != ""{
+					log.Println("Getting the info for your csv... (it could take a few seconds)")
+					//Create the CsvModifier instance
+					csvModifier := CsvModifier{filePath, uuid.NewV4().String() + ".csv", nil}
+					//only modify the 1st line
+					linesTotal := countCsvLines(csvModifier.CsvToModifyPath)
+					log.Printf("Total rows: %d", linesTotal)
+				} else {
+					log.Println("`filepath, f` flag has to be provided")
+				}
+
+
 				return nil
 			},
 		},
@@ -64,12 +91,12 @@ func main() {
 /**
 Modify the headers of the csv and returns a new csv with the headers changed
  */
-func ModifyHeaders() {
+func ModifyHeaders(filepath string) {
 	loadConfig("config.json")
 	//log.Println(jsonFile)
-	log.Println("Modifying the headers of your csv!")
+	log.Println("Modifying the headers for your csv!")
 	//Create the CsvModifier instance
-	csvModifier := CsvModifier{"feeds.samples-1.csv", uuid.NewV4().String() + ".csv", nil}
+	csvModifier := CsvModifier{filepath, uuid.NewV4().String() + ".csv", nil}
 	//only modify the 1st line
 	fileFrom, _ := os.Open(csvModifier.CsvToModifyPath)
 	linesTotal := countCsvLines(csvModifier.CsvToModifyPath)
