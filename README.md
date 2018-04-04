@@ -3,7 +3,7 @@
 
 -This App assumes the headers exist in the first line of the csv
 
-##Installation
+## Installation
 -If you have golang then run:
 
 1. `go get github.com/ericbrisrubio/csvmanager` 
@@ -17,7 +17,7 @@ Once you run go install you have access globally to the binary file
 1. `git clone http://github.com/ericbrisrubio/csvmanager.git`
 2. `cd csvmanager/`
 
-##Commmands
+## Commmands
 -To get the fileinfo:
 
 no golang installed:
@@ -34,12 +34,12 @@ no golang installed:
 golang installed:
 `csvmanager -c "path/to/configfile" -f "path/to/file" d`
 
-##Current features
+## Current features
 The headers modification currently changes the headers to uppercase only.
 (To have this value just add "Upper" value for key entry "name_changer_instance" in the config.json 
 file)
 
-##Extending the headers transformation (Developers note)
+## Extending the headers transformation (Developers note)
 For different ways to extend the way the headers are modified
 you should extend `IChanger` interface and add a new entry under:
 ```
