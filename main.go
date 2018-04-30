@@ -70,6 +70,13 @@ func main() {
 					//Create the CsvModifier instance
 					csvModifier := CsvModifier{filePath, uuid.NewV4().String() + ".csv", nil}
 					//only modify the 1st line
+					headers := readHeaders(csvModifier.CsvToModifyPath)
+					headersInOne := "| "
+					for i:=0; i<len(headers); i++ {
+						headersInOne+=headers[i]+" | "
+					}
+					log.Printf("Headers: %s", headersInOne)
+
 					linesTotal := countCsvLines(csvModifier.CsvToModifyPath)
 					log.Printf("Total rows: %d", linesTotal)
 				} else {
@@ -159,6 +166,13 @@ func countCsvLines(filepath string) int{
 	}
 	file.Close()
 	return lineCount
+}
+
+func readHeaders(filepath string) []string{
+	fileFrom, _ := os.Open(filepath)
+	reader := csv.NewReader(bufio.NewReader(fileFrom))
+	line, _ := reader.Read()
+	return line
 }
 
 func loadConfig(path string) {
